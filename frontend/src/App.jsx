@@ -1,37 +1,66 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-import Register from './components/Register';
-import ChatList from './components/ChatList';
-import Login from './components/Login';
-import Conversation from './components/Conversation';
-// Navbar import removed
 import { useAuthentication } from './auth';
 import AuthPage from './pages/AuthPage';
-import Home from './pages/Home';
+import ChatList from './components/ChatList';
+import Conversation from './components/Conversation';
 import ProtectedRoute from './components/AuthAccess';
 
 const App = () => {
-  const {isAuthenticated} = useAuthentication()
-  const ProtectedLogin = () => {
-    return isAuthenticated ? <Navigate to='/chats' /> : <AuthPage initialMethod='login' />
-  }
-  const ProtectedRegister = () => {
-    return isAuthenticated ? <Navigate to='/chats' /> : <AuthPage initialMethod='register' />
-  }
+  const { isAuthenticated } = useAuthentication();
+
   return (
     <Router>
-      {/* Navbar removed from here */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<ProtectedLogin />}/>
-        <Route path="/register" element={<ProtectedRegister />}/>
-        <Route path="/chats" element={
-        <ProtectedRoute>
-            <ChatList />
-        </ProtectedRoute>
-        } />
-        <Route path="/chat/:conversationId" element={<Conversation />} />
+        {/* ROOT PATH - ALWAYS GO TO LOGIN (no home page) */}
+        <Route 
+          path="/" 
+          element={<Navigate to="/login" replace />} 
+        />
+        
+        {/* PUBLIC ROUTES - Only for non-logged in users */}
+        <Route 
+          path="/login" 
+          element={
+            !isAuthenticated ? 
+              <AuthPage initialMethod='login' /> 
+              : <Navigate to="/chats" replace />
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            !isAuthenticated ? 
+              <AuthPage initialMethod='register' /> 
+              : <Navigate to="/chats" replace />
+          } 
+        />
+        
+        {/* PROTECTED ROUTES - Only for logged in users */}
+        <Route 
+          path="/chats" 
+          element={
+            <ProtectedRoute>
+              <ChatList />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/chat/:conversationId" 
+          element={
+            <ProtectedRoute>
+              <Conversation />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* REMOVED /home route completely */}
+        
+        {/* Catch-all route for unknown paths */}
+        <Route 
+          path="*" 
+          element={<Navigate to="/login" replace />} 
+        />
       </Routes>
     </Router>
   );
