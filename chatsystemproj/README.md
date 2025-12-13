@@ -34,7 +34,12 @@ venv\Scripts\activate
 source venv/bin/activate
 
 # 4. Install Python dependencies
-pip install -r requirements.txt
+pip install Django==5.1.7
+pip install channels==4.3.2
+pip install channels-redis==4.2.0
+pip install daphne==4.1.3
+pip install asgiref==3.8.1
+pip install sqlparse==0.5.3
 
 # 5. Apply migrations
 cd chatsystemproj
@@ -124,14 +129,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 3. **npm install errors?** Clear cache: `npm cache clean --force`
 4. **Database issues?** Run: `python manage.py migrate --run-syncdb`
 
-
-## 📄 License
-MIT License - see LICENSE file for details
-
----
-
-⭐ **Star this repo if you found it useful!**  
-🐛 **Report issues** to help improve the project  
+ 
 💻 **Happy Coding!** 🚀
 
 ---
